@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 // Create health data
 export const createHealthData = async (req, res) => {
   try {
-    const { age, tension } = req.body;
+    const { age, tension, weight, height } = req.body;
 
     // Validation
     if (typeof age !== "number" || typeof tension !== "number") {
@@ -20,9 +20,22 @@ export const createHealthData = async (req, res) => {
       });
     }
 
-    if (tension < 0) {
+    if (tension <= 0) {
       return res.status(400).json({
-        error: "Tension cannot be negative.",
+        error: "Tension must be greater than 0.",
+      });
+    }
+
+    // Validate optional fields
+    if (weight !== undefined && (typeof weight !== "number" || weight <= 0)) {
+      return res.status(400).json({
+        error: "Weight must be a number greater than 0.",
+      });
+    }
+
+    if (height !== undefined && (typeof height !== "number" || height <= 0)) {
+      return res.status(400).json({
+        error: "Height must be a number greater than 0.",
       });
     }
 
@@ -30,6 +43,8 @@ export const createHealthData = async (req, res) => {
       data: {
         age: Math.floor(age),
         tension: parseFloat(tension),
+        weight: weight ? parseFloat(weight) : null,
+        height: height ? parseFloat(height) : null,
       },
     });
 

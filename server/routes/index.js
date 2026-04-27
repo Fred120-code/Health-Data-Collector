@@ -4,6 +4,7 @@ import {
   getAllHealthData,
   calculateRegression,
 } from "../controllers/dataController.js";
+import { analyzeData } from "../controllers/analysisController.js";
 import { healthCheck } from "../controllers/healthController.js";
 
 const router = express.Router();
@@ -12,6 +13,9 @@ const router = express.Router();
 router.post("/data", createHealthData);
 router.get("/data", getAllHealthData);
 router.get("/regression", calculateRegression);
+
+// Analysis route
+router.post("/analyze", analyzeData);
 
 // Health check route
 router.get("/health", healthCheck);

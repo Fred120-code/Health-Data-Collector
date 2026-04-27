@@ -14,5 +14,7 @@ model HealthData {
   id        Int     @id @default(autoincrement())
   age       Int
   tension   Float
+  weight    Float?
+  height    Float?
   createdAt DateTime @default(now())
 }

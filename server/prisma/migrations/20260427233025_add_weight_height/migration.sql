@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "HealthData" ADD COLUMN     "height" DOUBLE PRECISION,
+ADD COLUMN     "weight" DOUBLE PRECISION;
