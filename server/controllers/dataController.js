@@ -79,6 +79,7 @@ export const calculateRegression = async (req, res) => {
     const sumY = data.reduce((sum, d) => sum + d.tension, 0);
     const sumXY = data.reduce((sum, d) => sum + d.age * d.tension, 0);
     const sumX2 = data.reduce((sum, d) => sum + d.age * d.age, 0);
+    const sumY2 = data.reduce((sum, d) => sum + d.tension * d.tension, 0);
 
     const meanX = sumX / n;
     const meanY = sumY / n;
@@ -95,9 +96,18 @@ export const calculateRegression = async (req, res) => {
     const b1 = (sumXY - (sumX * sumY) / n) / denominator;
     const b0 = meanY - b1 * meanX;
 
+    // Calculate Pearson correlation coefficient (r)
+    const numerator = n * sumXY - sumX * sumY;
+    const denominatorR =
+      Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY)) || 1;
+    const r = numerator / denominatorR;
+    const rSquared = r * r; // Coefficient of determination (R²)
+
     res.json({
       b0: parseFloat(b0.toFixed(4)),
       b1: parseFloat(b1.toFixed(4)),
+      r: parseFloat(r.toFixed(4)),
+      rSquared: parseFloat(rSquared.toFixed(4)),
       points,
     });
   } catch (error) {

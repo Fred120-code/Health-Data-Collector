@@ -80,7 +80,7 @@ function DataForm({ onSubmit, isLoading }) {
         disabled={isLoading}
         className="w-full px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
       >
-        {isLoading ? "⏳ Adding..." : "➕ Add Data"}
+        {isLoading ? "Adding..." : " Add Data"}
       </button>
     </form>
   );

@@ -2,6 +2,14 @@ import React, { useState, useEffect } from "react";
 import DataForm from "./components/DataForm";
 import DataTable from "./components/DataTable";
 import RegressionChart from "./components/RegressionChart";
+import {
+  ChartNoAxesColumn,
+  ChartScatter,
+  Database,
+  Plus,
+  RotateCcw,
+  SquareActivity,
+} from "lucide-react";
 
 const API_BASE_URL = "http://localhost:3000";
 
@@ -88,8 +96,9 @@ function App() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            💊 Health Data Collector
+          <h1 className="text-4xl font-bold text-gray-800 mb-2 flex justify-center items-center">
+            <SquareActivity className="size-10 text-blue-500" />
+            Health Data Collector
           </h1>
           <p className="text-gray-600">
             Monitor health metrics and analyze trends
@@ -113,8 +122,9 @@ function App() {
           <div className="space-y-6">
             {/* Form Card */}
             <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                📝 Add Data
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4 flex items-center">
+                <Plus className="size-7 font-extrabold text-blue-500" />
+                Add Data
               </h2>
               <DataForm onSubmit={handleAddData} isLoading={loading} />
             </div>
@@ -122,15 +132,17 @@ function App() {
             {/* Data Table Card */}
             <div className="bg-white rounded-lg shadow-lg p-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-semibold text-gray-800">
-                  📊 Data Records
+                <h2 className="text-2xl font-semibold text-gray-800 flex items-center gap-1">
+                  <Database className="size-8 text-blue-500" />
+                  Data Records
                 </h2>
                 <button
                   onClick={fetchData}
                   disabled={loading}
-                  className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+                  className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 flex items-center gap-1"
                 >
-                  🔄 Refresh
+                  <RotateCcw className="size-4 text-white" />
+                  Refresh
                 </button>
               </div>
               {data.length === 0 ? (
@@ -147,15 +159,16 @@ function App() {
           <div className="space-y-6">
             {/* Regression Button Card */}
             <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                📈 Regression Analysis
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-1">
+                <ChartScatter className="size-6 text-blue-500" />
+                Regression Analysis
               </h2>
               <button
                 onClick={handleCalculateRegression}
                 disabled={loading || data.length < 2}
                 className="w-full px-6 py-3 bg-indigo-500 text-white font-semibold rounded-lg hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
-                {loading ? "⏳ Calculating..." : "📊 Calculate Regression"}
+                {loading ? "Calculating..." : "Calculate Regression"}
               </button>
               {data.length < 2 && (
                 <p className="text-gray-500 text-sm mt-2">
@@ -167,15 +180,23 @@ function App() {
             {/* Chart Card */}
             {regression && (
               <div className="bg-white rounded-lg shadow-lg p-6">
-                <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                  📉 Chart
+                <h2 className="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-1">
+                  <ChartNoAxesColumn className="size-7 text-blue-500" />
+                  Chart
                 </h2>
                 <RegressionChart regression={regression} />
-                <div className="mt-4 p-4 bg-blue-50 rounded">
+                <div className="mt-4 space-y-2 p-4 bg-blue-50 rounded">
                   <p className="text-sm text-gray-700">
                     <strong>Formula:</strong> tension ={" "}
                     {regression.b0.toFixed(2)} + {regression.b1.toFixed(4)} ×
                     age
+                  </p>
+                  <p className="text-sm text-gray-700">
+                    <strong>Correlation (r):</strong> {regression.r}
+                  </p>
+                  <p className="text-sm text-gray-700">
+                    <strong>R² (Coefficient of Determination):</strong>{" "}
+                    {regression.rSquared}
                   </p>
                 </div>
               </div>
