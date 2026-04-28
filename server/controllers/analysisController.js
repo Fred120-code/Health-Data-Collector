@@ -57,7 +57,7 @@ export const analyzeData = async (req, res) => {
 
     // Prepare data for regression
     const X = validData.map((row) => features.map((feature) => row[feature]));
-    const Y = validData.map((row) => row[target]);
+    const Y = validData.map((row) => [row[target]]); // MLR needs 2D array
 
     // Calculate multiple linear regression
     const regression = new MLR(X, Y);
@@ -76,18 +76,25 @@ export const analyzeData = async (req, res) => {
       }));
     } else {
       // Multiple case: plot real vs predicted
-      points = validData.map((row, idx) => ({
-        x: idx,
-        actual: row[target],
-        predicted: regression.predict(X[idx]),
-      }));
+      points = validData.map((row, idx) => {
+        const prediction = regression.predict(X[idx]);
+        return {
+          x: idx,
+          actual: row[target],
+          predicted: Array.isArray(prediction) ? prediction[0] : prediction,
+        };
+      });
     }
 
-    // Calculate R-squared
-    const meanY = Y.reduce((a, b) => a + b, 0) / Y.length;
-    const totalSS = Y.reduce((sum, y) => sum + Math.pow(y - meanY, 2), 0);
-    const predictions = X.map((row) => regression.predict(row));
-    const residualSS = Y.reduce(
+    // Calculate R-squared using raw Y values
+    const yValues = validData.map((row) => row[target]);
+    const meanY = yValues.reduce((a, b) => a + b, 0) / yValues.length;
+    const totalSS = yValues.reduce((sum, y) => sum + Math.pow(y - meanY, 2), 0);
+    const predictions = X.map((row) => {
+      const pred = regression.predict(row);
+      return Array.isArray(pred) ? pred[0] : pred;
+    });
+    const residualSS = yValues.reduce(
       (sum, y, idx) => sum + Math.pow(y - predictions[idx], 2),
       0,
     );
@@ -97,8 +104,12 @@ export const analyzeData = async (req, res) => {
       type,
       features,
       target,
-      coefficients: coefficients.map((c) => parseFloat(c.toFixed(4))),
-      intercept: parseFloat(intercept.toFixed(4)),
+      coefficients: coefficients.map((c) => {
+        const num = Number(c);
+        return isNaN(num) ? null : parseFloat(num.toFixed(4));
+      }),
+      intercept:
+        typeof intercept === "number" ? parseFloat(intercept.toFixed(4)) : 0,
       rSquared: parseFloat(rSquared.toFixed(4)),
       pointsUsed: validData.length,
       points,

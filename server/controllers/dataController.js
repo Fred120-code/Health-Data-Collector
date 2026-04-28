@@ -27,13 +27,21 @@ export const createHealthData = async (req, res) => {
     }
 
     // Validate optional fields
-    if (weight !== undefined && (typeof weight !== "number" || weight <= 0)) {
+    if (
+      weight !== undefined &&
+      weight !== null &&
+      (typeof weight !== "number" || weight <= 0)
+    ) {
       return res.status(400).json({
         error: "Weight must be a number greater than 0.",
       });
     }
 
-    if (height !== undefined && (typeof height !== "number" || height <= 0)) {
+    if (
+      height !== undefined &&
+      height !== null &&
+      (typeof height !== "number" || height <= 0)
+    ) {
       return res.status(400).json({
         error: "Height must be a number greater than 0.",
       });

@@ -11,7 +11,13 @@ import {
   SquareActivity,
 } from "lucide-react";
 
-const API_BASE_URL = "http://localhost:3000";
+const API_BASE_URL = "http://localhost:5000";
+
+const safeNumber = (val) => {
+  if (Array.isArray(val)) val = val[0];
+  const num = Number(val);
+  return isNaN(num) ? 0 : num;
+};
 
 function App() {
   const [data, setData] = useState([]);
@@ -285,11 +291,13 @@ function App() {
                     </p>
                     <p className="text-sm text-gray-700 font-mono bg-white p-2 rounded border border-gray-200">
                       tension ={" "}
-                      {multipleRegression.intercept?.toFixed(4) || "0"}{" "}
-                      {multipleRegression.coefficients?.map((coef, idx) => {
-                        const features = ["age", "weight", "height"];
+                      {safeNumber(multipleRegression.intercept).toFixed(4)}{" "}
+                      {multipleRegression.features?.map((feature, idx) => {
+                        const coef = safeNumber(
+                          multipleRegression.coefficients[idx],
+                        );
                         const sign = coef >= 0 ? "+" : "";
-                        return ` ${sign} ${coef.toFixed(4)} × ${features[idx]}`;
+                        return ` ${sign} ${coef.toFixed(4)} × ${feature}`;
                       })}
                     </p>
                   </div>
