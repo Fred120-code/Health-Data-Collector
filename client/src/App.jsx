@@ -11,7 +11,7 @@ import {
   SquareActivity,
 } from "lucide-react";
 
-const API_BASE_URL = "http://localhost:5000";
+const API_BASE_URL = "https://health-data-collector-pi.vercel.app";
 
 const safeNumber = (val) => {
   if (Array.isArray(val)) val = val[0];
