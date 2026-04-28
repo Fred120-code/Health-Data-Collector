@@ -21,7 +21,13 @@ function DataTable({ data }) {
               Age
             </th>
             <th className="px-4 py-2 text-left text-gray-700 font-semibold">
-              Blood Pressure (mmHg)
+              Tension (mmHg)
+            </th>
+            <th className="px-4 py-2 text-left text-gray-700 font-semibold">
+              Weight (kg)
+            </th>
+            <th className="px-4 py-2 text-left text-gray-700 font-semibold">
+              Height (m)
             </th>
             <th className="px-4 py-2 text-left text-gray-700 font-semibold">
               Date
@@ -37,6 +43,12 @@ function DataTable({ data }) {
               <td className="px-4 py-3 text-gray-800">{record.age}</td>
               <td className="px-4 py-3 text-gray-800">
                 {record.tension.toFixed(1)}
+              </td>
+              <td className="px-4 py-3 text-gray-800">
+                {record.weight ? record.weight.toFixed(1) : "-"}
+              </td>
+              <td className="px-4 py-3 text-gray-800">
+                {record.height ? record.height.toFixed(2) : "-"}
               </td>
               <td className="px-4 py-3 text-gray-600 text-sm">
                 {formatDate(record.createdAt)}

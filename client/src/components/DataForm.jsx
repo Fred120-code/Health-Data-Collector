@@ -3,6 +3,8 @@ import React, { useState } from "react";
 function DataForm({ onSubmit, isLoading }) {
   const [age, setAge] = useState("");
   const [tension, setTension] = useState("");
+  const [weight, setWeight] = useState("");
+  const [height, setHeight] = useState("");
   const [validationError, setValidationError] = useState("");
 
   const handleSubmit = (e) => {
@@ -11,7 +13,7 @@ function DataForm({ onSubmit, isLoading }) {
 
     // Validation
     if (!age || !tension) {
-      setValidationError("Please fill in all fields");
+      setValidationError("Age and tension are required");
       return;
     }
 
@@ -28,14 +30,44 @@ function DataForm({ onSubmit, isLoading }) {
       return;
     }
 
-    if (tensionNum < 0) {
-      setValidationError("Tension cannot be negative");
+    if (tensionNum <= 0) {
+      setValidationError("Tension must be greater than 0");
       return;
     }
 
-    onSubmit({ age: ageNum, tension: tensionNum });
+    // Validate optional fields
+    let weightNum = null;
+    let heightNum = null;
+
+    if (weight) {
+      weightNum = parseFloat(weight);
+      if (isNaN(weightNum) || weightNum <= 0) {
+        setValidationError("Weight must be a valid number greater than 0");
+        return;
+      }
+    }
+
+    if (height) {
+      heightNum = parseFloat(height);
+      if (isNaN(heightNum) || heightNum <= 0) {
+        setValidationError("Height must be a valid number greater than 0");
+        return;
+      }
+    }
+
+    const formData = {
+      age: ageNum,
+      tension: tensionNum,
+    };
+
+    if (weightNum !== null) formData.weight = weightNum;
+    if (heightNum !== null) formData.height = heightNum;
+
+    onSubmit(formData);
     setAge("");
     setTension("");
+    setWeight("");
+    setHeight("");
   };
 
   return (
@@ -46,33 +78,67 @@ function DataForm({ onSubmit, isLoading }) {
         </div>
       )}
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Age (years)
-        </label>
-        <input
-          type="number"
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-          placeholder="Enter age"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          disabled={isLoading}
-        />
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Age (years) *
+          </label>
+          <input
+            type="number"
+            value={age}
+            onChange={(e) => setAge(e.target.value)}
+            placeholder="Enter age"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={isLoading}
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Tension (mmHg) *
+          </label>
+          <input
+            type="number"
+            value={tension}
+            onChange={(e) => setTension(e.target.value)}
+            placeholder="Enter blood pressure"
+            step="0.1"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={isLoading}
+          />
+        </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Blood Pressure (mmHg)
-        </label>
-        <input
-          type="number"
-          value={tension}
-          onChange={(e) => setTension(e.target.value)}
-          placeholder="Enter blood pressure"
-          step="0.1"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          disabled={isLoading}
-        />
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Weight (kg)
+          </label>
+          <input
+            type="number"
+            value={weight}
+            onChange={(e) => setWeight(e.target.value)}
+            placeholder="Optional"
+            step="0.1"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={isLoading}
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Height (m)
+          </label>
+          <input
+            type="number"
+            value={height}
+            onChange={(e) => setHeight(e.target.value)}
+            placeholder="Optional"
+            step="0.01"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={isLoading}
+          />
+        </div>
       </div>
 
       <button
@@ -82,6 +148,8 @@ function DataForm({ onSubmit, isLoading }) {
       >
         {isLoading ? "Adding..." : " Add Data"}
       </button>
+
+      <p className="text-xs text-gray-500">* Required fields</p>
     </form>
   );
 }
