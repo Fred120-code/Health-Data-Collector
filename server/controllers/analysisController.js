@@ -62,9 +62,20 @@ export const analyzeData = async (req, res) => {
     // Calculate multiple linear regression
     const regression = new MLR(X, Y);
 
-    // Get coefficients
-    const coefficients = regression.weights || [];
-    const intercept = regression.intercept || 0;
+    // Get coefficients - convert from Matrix to array if needed
+    let coefficients = regression.weights || [];
+    if (coefficients.data) {
+      // It's a Matrix object, extract the data
+      coefficients = coefficients.data[0] || [];
+    }
+    if (!Array.isArray(coefficients)) {
+      coefficients = Array.from(coefficients);
+    }
+
+    let intercept = regression.intercept || 0;
+    if (typeof intercept === "object" && intercept.data) {
+      intercept = intercept.data[0] || 0;
+    }
 
     // Create points for visualization (only for 2D cases)
     let points = [];

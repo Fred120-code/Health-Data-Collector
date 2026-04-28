@@ -247,7 +247,7 @@ function App() {
               )}
               {regressionType === "multiple" && (
                 <p className="text-blue-600 text-xs mt-2">
-                  💡 Note: Uses records with weight and height data
+                  Note: Uses records with weight and height data
                 </p>
               )}
             </div>
@@ -326,7 +326,7 @@ function App() {
                               {["Age", "Weight", "Height"][idx]}
                             </td>
                             <td className="text-right p-2 font-mono">
-                              {coef.toFixed(4)}
+                              {safeNumber(coef).toFixed(4)}
                             </td>
                           </tr>
                         ))}
@@ -339,7 +339,7 @@ function App() {
                     {multipleRegression.rSquared?.toFixed(4) || "N/A"}
                   </p>
                   <p className="text-xs text-gray-600">
-                    Data points used: {multipleRegression.points || "0"}
+                    Data points used: {multipleRegression.pointsUsed || "0"}
                   </p>
                 </div>
               </div>
