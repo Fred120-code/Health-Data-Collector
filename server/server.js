@@ -10,5 +10,8 @@ app.use(express.json());
 
 // Routes
 app.use("/", routes);
+app.get("/", (req, res) => {
+    res.send("Server is running")
+})
 
 export default app;
