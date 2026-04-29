@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import DataForm from "./components/DataForm";
 import DataTable from "./components/DataTable";
 import RegressionChart from "./components/RegressionChart";
+import InfoModal from "./components/InfoModal";
 import {
   ChartNoAxesColumn,
   ChartScatter,
   Database,
+  Info,
   Plus,
   RotateCcw,
   SquareActivity,
@@ -27,6 +29,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(true);
 
   // Fetch all data
   const fetchData = async () => {
@@ -135,9 +138,20 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+      <InfoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
+          <div className="flex justify-between items-start mb-4">
+            <div></div>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="p-2 bg-blue-100 hover:bg-blue-200 rounded-full transition"
+              title="Informations sur l'application"
+            >
+              <Info className="size-6 text-blue-600" />
+            </button>
+          </div>
           <h1 className="text-4xl font-bold text-gray-800 mb-2 flex justify-center items-center">
             <SquareActivity className="size-10 text-blue-500" />
             Health Data Collector
