@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 (app.use(
   cors({
-    origin: "https://health-data-collector-w6c5.vercel.app",
+    origin: "https://ayemtsa-djouda-joran-fred-24f2665.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   }),
